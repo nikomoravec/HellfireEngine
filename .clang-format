@@ -1,0 +1,11 @@
+BasedOnStyle: Microsoft
+AccessModifierOffset: -4
+IndentAccessModifiers: false
+BreakConstructorInitializers: BeforeComma
+BreakTemplateDeclarations: No
+RequiresClausePosition: WithPreceding
+SpaceAfterTemplateKeyword: false
+ColumnLimit: 0
+PointerAlignment: Left
+DerivePointerAlignment: false
+ReferenceAlignment: Left

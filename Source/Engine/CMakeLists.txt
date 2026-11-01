@@ -20,3 +20,9 @@ target_link_libraries(Hellfire PUBLIC
     fmt::fmt
     beman::cstring_view
 )
+
+if (HELLFIRE_BUILD_TESTS)
+    target_link_libraries(Hellfire PUBLIC
+        Catch2::Catch2WithMain
+    )
+endif()

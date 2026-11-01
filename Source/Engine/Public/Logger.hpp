@@ -9,7 +9,6 @@
 #include <chrono>
 #include <cstdint>
 #include <exception>
-#include <expected>
 #include <filesystem>
 #include <memory>
 #include <mutex>
@@ -121,8 +120,12 @@ class Logger
 {
 public:
     Logger();
+    ~Logger();
 
     void addOutput(std::unique_ptr<LogOutput> output);
+    void makeDefault() noexcept;
+
+    static Logger* defaultLogger() noexcept;
 
     template<typename... Args>
     void debug(const LogCategory& category, fmt::format_string<Args...> format, Args&&... args) noexcept

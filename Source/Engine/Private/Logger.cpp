@@ -6,12 +6,18 @@
 #include "fmt/format.h"
 #include "fmt/std.h"
 
+#include <atomic>
 #include <chrono>
 #include <cstdio>
 #include <thread>
 
 namespace Hellfire::Engine
 {
+namespace
+{
+constinit std::atomic<Logger*> g_defaultLogger{nullptr};
+} // namespace
+
 std::string LogMessage::line() const
 {
     const auto localTime = std::chrono::current_zone()->to_local(std::chrono::floor<std::chrono::milliseconds>(m_time));
@@ -61,10 +67,26 @@ Logger::Logger()
 {
 }
 
+Logger::~Logger()
+{
+    Logger* expected = this;
+    g_defaultLogger.compare_exchange_strong(expected, nullptr);
+}
+
 void Logger::addOutput(std::unique_ptr<LogOutput> output)
 {
     const std::scoped_lock lock{m_mutex};
     m_outputs.push_back(std::move(output));
+}
+
+void Logger::makeDefault() noexcept
+{
+    g_defaultLogger.store(this);
+}
+
+Logger* Logger::defaultLogger() noexcept
+{
+    return g_defaultLogger.load();
 }
 
 void Logger::write(const LogCategory& category, LogLevel level, fmt::string_view format, fmt::format_args arguments) noexcept

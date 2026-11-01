@@ -21,6 +21,10 @@ target_link_libraries(Hellfire PUBLIC
     beman::cstring_view
 )
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14)
+      target_link_libraries(Hellfire PRIVATE $<$<CONFIG:Debug>:stdc++exp>)
+endif()
+
 target_compile_definitions(Hellfire PUBLIC
     $<$<CONFIG:Debug>:HELLFIRE_DEBUG>
 )

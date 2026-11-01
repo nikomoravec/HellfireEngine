@@ -38,7 +38,7 @@ void LogConsoleOutput::write(const LogMessage& message) noexcept
     }
 }
 
-LogFileOutput::LogFileOutput(fmt::ostream file) noexcept
+LogFileOutput::LogFileOutput(fmt::buffered_file file) noexcept
     : m_file(std::move(file))
 {
 }
@@ -48,7 +48,7 @@ void LogFileOutput::write(const LogMessage& message) noexcept
     try
     {
         m_file.print("{}\n", message.line());
-        m_file.flush();
+        std::fflush(m_file.get());
     }
     catch (...)
     {

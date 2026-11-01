@@ -16,6 +16,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 namespace Hellfire::Engine
 {
@@ -103,11 +104,11 @@ public:
 class LogFileOutput final : public LogOutput
 {
 public:
-    explicit LogFileOutput(fmt::ostream file) noexcept;
+    explicit LogFileOutput(fmt::buffered_file file) noexcept;
     void write(const LogMessage& message) noexcept override;
 
 private:
-    fmt::ostream m_file;
+    fmt::buffered_file m_file;
 };
 
 class LogConsoleOutput final : public LogOutput

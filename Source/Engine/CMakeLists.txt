@@ -22,7 +22,5 @@ target_link_libraries(Hellfire PUBLIC
 )
 
 if (HELLFIRE_BUILD_TESTS)
-    target_link_libraries(Hellfire PUBLIC
-        Catch2::Catch2WithMain
-    )
+    add_subdirectory(Tests)
 endif()

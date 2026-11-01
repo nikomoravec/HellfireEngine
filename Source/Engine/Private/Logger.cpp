@@ -1,0 +1,92 @@
+#include "Logger.hpp"
+
+#include "beman/cstring_view/cstring_view.hpp"
+#include "fmt/base.h"
+#include "fmt/chrono.h"
+#include "fmt/format.h"
+#include "fmt/std.h"
+
+#include <chrono>
+#include <cstdio>
+#include <thread>
+
+namespace Hellfire::Engine
+{
+std::string LogMessage::line() const
+{
+    const auto localTime = std::chrono::current_zone()->to_local(std::chrono::floor<std::chrono::milliseconds>(m_time));
+    const auto threadId = std::this_thread::get_id();
+
+    return fmt::format("[thread:{}][{:%H:%M:%S}][{}][{}]: {}", threadId, localTime, m_level, m_category.name().c_str(), m_text);
+}
+
+void LogConsoleOutput::write(const LogMessage& message) noexcept
+{
+    try
+    {
+        const auto logLevel = message.level();
+        if (logLevel == LogLevel::ERROR || logLevel == LogLevel::FATAL)
+        {
+            fmt::println(stderr, "{}", message.line());
+            return;
+        }
+
+        fmt::println(stdout, "{}", message.line());
+    }
+    catch (...)
+    {
+    }
+}
+
+LogFileOutput::LogFileOutput(fmt::ostream file) noexcept
+    : m_file(std::move(file))
+{
+}
+
+void LogFileOutput::write(const LogMessage& message) noexcept
+{
+    try
+    {
+        m_file.print("{}\n", message.line());
+        m_file.flush();
+    }
+    catch (...)
+    {
+    }
+}
+
+Logger::Logger()
+    : m_mutex()
+    , m_outputs()
+{
+}
+
+void Logger::addOutput(std::unique_ptr<LogOutput> output)
+{
+    const std::scoped_lock lock{m_mutex};
+    m_outputs.push_back(std::move(output));
+}
+
+void Logger::write(const LogCategory& category, LogLevel level, fmt::string_view format, fmt::format_args arguments) noexcept
+{
+    if (level < category.minimumLevel())
+    {
+        return;
+    }
+
+    try
+    {
+        const std::string text = fmt::vformat(format, arguments);
+        const LogMessage message{category, level, std::chrono::system_clock::now(), text};
+
+        const std::scoped_lock lock{m_mutex};
+        for (auto&& output : m_outputs)
+        {
+            output->write(message);
+        }
+    }
+    catch (...)
+    {
+    }
+}
+} // namespace Hellfire::Engine

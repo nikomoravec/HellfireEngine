@@ -19,6 +19,7 @@ target_include_directories(Hellfire PRIVATE
 target_link_libraries(Hellfire PUBLIC
     fmt::fmt
     beman::cstring_view
+    glm::glm
 )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14)

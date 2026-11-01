@@ -1,4 +1,5 @@
 add_executable(HellfireEngineTests
+    Assertion.cpp
     Logger.cpp
 )
 

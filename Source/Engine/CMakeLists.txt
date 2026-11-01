@@ -21,6 +21,10 @@ target_link_libraries(Hellfire PUBLIC
     beman::cstring_view
 )
 
+target_compile_definitions(Hellfire PUBLIC
+    $<$<CONFIG:Debug>:HELLFIRE_DEBUG>
+)
+
 if (HELLFIRE_BUILD_TESTS)
     add_subdirectory(Tests)
 endif()

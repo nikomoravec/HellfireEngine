@@ -3,6 +3,7 @@ add_executable(HellfireEngineTests
     Hash.cpp
     Logger.cpp
     Rotator.cpp
+    StringId.cpp
     Transform.cpp
     Units.cpp
 )

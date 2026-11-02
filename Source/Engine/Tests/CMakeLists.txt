@@ -3,6 +3,7 @@ add_executable(HellfireEngineTests
     Logger.cpp
     Rotator.cpp
     Transform.cpp
+    Units.cpp
 )
 
 target_link_libraries(HellfireEngineTests PRIVATE

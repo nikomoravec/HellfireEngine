@@ -2,6 +2,7 @@ add_executable(HellfireEngineTests
     Assertion.cpp
     Logger.cpp
     Rotator.cpp
+    Transform.cpp
 )
 
 target_link_libraries(HellfireEngineTests PRIVATE

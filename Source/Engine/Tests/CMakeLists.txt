@@ -1,5 +1,6 @@
 add_executable(HellfireEngineTests
     Assertion.cpp
+    Hash.cpp
     Logger.cpp
     Rotator.cpp
     Transform.cpp
